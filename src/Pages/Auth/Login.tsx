@@ -31,10 +31,11 @@ function Login( ) {
 
             </div>
             <div className="auth-right">
-                <p className="auth-switch">
+ 
+                <form className="signup-form" onSubmit={handleSubmit}> 
+                                   <p className="auth-switch">
 Already have an account? <span>Login</span>
 </p>
-                <form className="signup-form" onSubmit={handleSubmit}> 
                     <h2>Create Account</h2>
 
 

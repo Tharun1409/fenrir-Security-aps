@@ -3,6 +3,7 @@ import  Login from "../Pages/Auth/Login"
 import Dashboard from "../Pages/Dashboard-Component/Dashboard"
 import ScanDetail from "../Pages/Scan-Details/ScanDetails"
 import AppShellLayout from "./AppShellLayout"
+import ComingSoon from "../Components/UI-Component/ComingSoon"
 
 
 function AppRouter() {
@@ -17,6 +18,7 @@ function AppRouter() {
   <Route path="/dashboard" element={<Dashboard />} />
   <Route path="/scan/:id" element={<ScanDetail />} />
 </Route>
+<Route path="/comingsoon" element={<ComingSoon/>}/>
        </Routes>
        </BrowserRouter>
     )

@@ -5,19 +5,37 @@ import VulnerabilityBadges from "../../Components/UI-Component/VulnerabilityCoun
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 
-
+const ITEMS_PER_PAGE = 9;
 
 function Dashboard() {
 
-    const [search, setSearch] = useState("")
-    const [statusFilter, setStatusFilter] = useState("all")
+    const [search, setSearch] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [statusFilter, setStatusFilter] = useState<"All" | "completed" | "scheduled" | "failed">("All");
 
 
 
-    const filteredScans = scans.filter(scan =>
-        scan.name.toLowerCase().includes(search.toLowerCase())
-    )
-        .filter((scan) => statusFilter === "all" ? true : scan.status === statusFilter)
+    const filteredScans = scans.filter((scan) => {
+  const matchesSearch = scan.name.toLowerCase().includes(search.toLowerCase());
+
+  const matchesStatus =
+    statusFilter === "All" ? true : scan.status === statusFilter;
+
+  return matchesSearch && matchesStatus;
+});
+    const totalPages = Math.max(1, Math.ceil(filteredScans.length / ITEMS_PER_PAGE));
+
+    const statrtIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
+    const currentScans = filteredScans.slice(statrtIndex, statrtIndex + ITEMS_PER_PAGE);
+
+
+
+
+
+
+
+
 
     const navigate = useNavigate()
     return (
@@ -84,7 +102,10 @@ function Dashboard() {
                     type="text"
                     value={search}
                     onChange={
-                        (e) => setSearch(e.target.value)
+                        (e) => {
+                            setSearch(e.target.value);
+                            setCurrentPage(1);
+                        }
                     }
                     placeholder="search scans.."
                     className="search-input" />
@@ -94,12 +115,12 @@ function Dashboard() {
                     <select
                         className="btn secondary"
                         value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
+                        onChange={(e) => setStatusFilter(e.target.value as any)}
                     >
-                        <option value="all">Filter</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Failed">Failed</option>
-                        <option value="Scheduled">Scheduled</option>
+                        <option value="All">Filter</option>
+                        <option value="completed">Completed</option>
+                        <option value="failed">Failed</option>
+                        <option value="scheduled">Scheduled</option>
                     </select>
 
                     <button className="btn secondary">Column</button>
@@ -126,7 +147,7 @@ function Dashboard() {
                     </thead>
 
                     <tbody>
-                        {filteredScans.map(scan => (
+                        {currentScans.map(scan => (
                             <tr key={scan.id}
                                 onClick={() => navigate(`/scan/${scan.id}`)}
                                 className="clickable-row">
@@ -136,14 +157,13 @@ function Dashboard() {
                                     <StatusChip Status={scan.status as "completed" | "scheduled" | "failed"} />
                                 </td>
                                 <td>
-                                    <div>
-                                        <div className="progress-bar" style={{ width: `${scan.progress}%` }} />
-
+                                    <div className="progress-bar">
+                                        <div className="progress-fill" style={{ width: `${scan.progress}%` }} />
 
                                     </div>
                                     {scan.progress}%
                                 </td>
-                                <td>
+                                <td >
                                     <VulnerabilityBadges data={scan.vulnerabilities} />
                                 </td>
                                 <td>{scan.lastScan}</td>
@@ -155,7 +175,37 @@ function Dashboard() {
                 </table>
 
             </div>
+            <div className="pagination">
 
+                <button
+                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                    disabled={currentPage === 1}
+                >
+                    Prev
+                </button>
+
+                {[...Array(totalPages)].map((_, index) => {
+                    const page = index + 1;
+
+                    return (
+                        <button
+                            key={page}
+                            className={currentPage === page ? "active-page" : ""}
+                            onClick={() => setCurrentPage(page)}
+                        >
+                            {page}
+                        </button>
+                    );
+                })}
+
+                <button
+                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
+
+            </div>
 
         </div>
     )

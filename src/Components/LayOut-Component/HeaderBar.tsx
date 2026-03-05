@@ -5,14 +5,18 @@ type HeaderBarProps = {
   breadcrumbs: ReactNode;
   actions?: ReactNode;
   rightMeta?: ReactNode;
+  onMenuClick?: ()=> void;
 };
 
-export default function HeaderBar({ breadcrumbs, actions, rightMeta }: HeaderBarProps) {
+export default function HeaderBar({ breadcrumbs, actions, rightMeta, onMenuClick }: HeaderBarProps) {
  
   useLocation();
 
   return (
     <div className="page-header">
+        <button className="mobile-menu-btn" onClick={onMenuClick} aria-label="Open Menu">
+             ☰
+        </button>
       <div className="breadcrumbs">{breadcrumbs}</div>
 
       <div className="header-actions">

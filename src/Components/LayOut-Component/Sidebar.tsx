@@ -9,9 +9,13 @@ import {
   MdSupport,
 } from "react-icons/md";
 
-function Sidebar() {
+type Props={
+    isOpen? :boolean;
+    onClose? :()=>void;
+}
+function Sidebar({isOpen = false, onClose }: Props) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? "open" : " "}`}>
       {/* Brand */}
       <div className="sidebar-brand">
         <div className="brand-mark">●</div>
@@ -25,31 +29,31 @@ function Sidebar() {
           className={({ isActive }) => (isActive ? "side-link active" : "side-link")}
         >
           <span className="side-ic"><MdDashboard /></span>
-          <span className="side-tx">Dashboard</span>
+          <span className="side-tx" onClick={onClose}>Dashboard</span>
         </NavLink>
 
         <NavLink
-          to="/projects"
+          to="/comingsoon"
           className={({ isActive }) => (isActive ? "side-link active" : "side-link")}
         >
           <span className="side-ic"><MdFolder /></span>
-          <span className="side-tx">Projects</span>
+          <span className="side-tx" onClick={onClose}>Projects</span>
         </NavLink>
 
         <NavLink
-          to="/scans"
+          to="/scan/:id"
           className={({ isActive }) => (isActive ? "side-link active" : "side-link")}
         >
           <span className="side-ic"><MdSecurity /></span>
-          <span className="side-tx">Scans</span>
+          <span className="side-tx" onClick={onClose}>Scans</span>
         </NavLink>
 
         <NavLink
-          to="/schedule"
+          to="/comingsoon"
           className={({ isActive }) => (isActive ? "side-link active" : "side-link")}
         >
           <span className="side-ic"><MdSchedule /></span>
-          <span className="side-tx">Schedule</span>
+          <span className="side-tx" onClick={onClose}>Schedule</span>
         </NavLink>
       </nav>
 
@@ -59,17 +63,17 @@ function Sidebar() {
       <div className="sidebar-secondary">
         <button className="side-link ghost" type="button">
           <span className="side-ic"><MdNotifications /></span>
-          <span className="side-tx">Notifications</span>
+          <span className="side-tx" onClick={onClose}>Notifications</span>
         </button>
 
         <button className="side-link ghost" type="button">
           <span className="side-ic"><MdSettings /></span>
-          <span className="side-tx">Settings</span>
+          <span className="side-tx" onClick={onClose}>Settings</span>
         </button>
 
         <button className="side-link ghost" type="button">
           <span className="side-ic"><MdSupport /></span>
-          <span className="side-tx">Support</span>
+          <span className="side-tx" onClick={onClose}>Support</span>
         </button>
       </div>
 
